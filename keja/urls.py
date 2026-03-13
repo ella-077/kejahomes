@@ -26,7 +26,5 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('properties/',views.properties,name='properties'),
     path('property-single/',views.propertysingle,name='property-single'),
-    path('service-details/',views.servicedetails,name='service-details'),
-    path('services/',views.services,name='services'),
-    path('starter-page/',views.starterpage,name='starter-page'),
+    path('maps/', views.maps, name='maps'),
 ]

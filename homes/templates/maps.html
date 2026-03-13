@@ -1,0 +1,235 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Find Apartments - KejaHomes</title>
+
+<link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+<link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+<link href="https://fonts.googleapis.com/css2?family=Roboto&family=Poppins&family=Raleway&display=swap" rel="stylesheet">
+
+<link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+<link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+<link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+<link href="{% static 'assets/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+<link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+<link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+<link href="https://unpkg.com/leaflet/dist/leaflet.css" rel="stylesheet">
+
+<style>
+body { padding-top: 100px; font-family: 'Poppins', sans-serif; }
+#map { height: 500px; width: 100%; border-radius: 8px; margin-top: 20px; }
+
+.search-bar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+.search-bar input {
+    width: 60%;
+    max-width: 450px;
+    padding: 12px 20px;
+    border-radius: 50px 0 0 50px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+.search-bar button {
+    padding: 12px 20px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 0 50px 50px 0;
+    cursor: pointer;
+    font-size: 16px;
+}
+.search-bar button:hover { background-color: #0056b3; }
+
+.navmenu ul { list-style: none; padding: 0; display: flex; gap: 15px; }
+.navmenu ul li a { text-decoration: none; color: #333; font-weight: bold; }
+.navmenu ul li a.active { color: #007bff; }
+</style>
+</head>
+
+<body>
+<header id="header" class="header d-flex align-items-center fixed-top">
+<div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+<a href="{% url 'index' %}" class="logo d-flex align-items-center"><h1 class="sitename">KEJA<span>HOMES</span></h1></a>
+<nav id="navmenu" class="navmenu">
+<ul>
+<li><a href="{% url 'index' %}" class="active">Home</a></li>
+<li><a href="{% url 'about' %}">Services</a></li>
+<li><a href="{% url 'properties' %}">Properties</a></li>
+<li><a href="{% url 'agents' %}">Agents</a></li>
+<li><a href="{% url 'contact' %}">Contact</a></li>
+</ul>
+<i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+</nav>
+</div>
+</header>
+
+<div class="search-bar">
+<input type="text" id="locationInput" placeholder="Type a location (or leave blank for nearby)">
+<button id="findBtn"><i class="bi bi-search"></i> Find</button>
+</div>
+
+<div id="map"></div>
+
+<footer id="footer" class="footer light-background">
+
+    <div class="container">
+      <div class="row gy-3">
+        <div class="col-lg-3 col-md-6 d-flex">
+          <i class="bi bi-geo-alt icon"></i>
+          <div class="address">
+            <h4>Address</h4>
+            <p>Kipro Center</p>
+            <p>Westlands, Nairobi</p>
+            <p></p>
+          </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6 d-flex">
+          <i class="bi bi-telephone icon"></i>
+          <div>
+            <h4>Contact</h4>
+            <p>
+              <strong>Phone:</strong> <span>+254112299921</span><br>
+              <strong>Email:</strong> <span>kejahomes@gmail.com</span><br>
+            </p>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 d-flex">
+          <i class="bi bi-clock icon"></i>
+          <div>
+            <h4>Opening Hours</h4>
+            <p>
+              <strong>Open 24/7</strong> <span>Your Home, Anytime</span><br>
+            </p>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+
+    <div class="container copyright text-center mt-4">
+      <p>© <span>Copyright</span> <strong class="px-1 sitename">KejaHomes.</strong> <span>All Rights Reserved.</span></p>
+    </div>
+
+  </footer>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script>
+let map = L.map('map').setView([-1.286389, 36.817223], 13);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+}).addTo(map);
+
+let apartments = [
+    {% for a in apartments %}
+    {
+        name:"{{a.name}}",
+        price:"{{a.price}}",
+        contact:"{{a.contact}}",
+        lat:{{a.latitude}},
+        lng:{{a.longitude}},
+        description:"{{a.description}}"
+    },
+    {% endfor %}
+];
+
+let userMarker;
+
+function showNearby(lat, lng) {
+    map.setView([lat, lng], 14);
+
+    if(userMarker) { map.removeLayer(userMarker); }
+
+    userMarker = L.marker([lat, lng], {
+        icon: L.icon({iconUrl: 'https://cdn-icons-png.flaticon.com/512/64/64113.png', iconSize:[35,35]})
+    }).addTo(map).bindPopup("<b>You are here</b>").openPopup();
+
+    apartments.forEach(a => {
+        if(getDistance(lat, lng, a.lat, a.lng) <= 50) {
+            L.marker([a.lat, a.lng])
+             .addTo(map)
+            .bindPopup(`
+              <b>${a.name}</b><br>
+              ${a.description}<br>
+              <b>Price:</b> ${a.price}<br>
+              <b>Contact:</b> ${a.contact}<br><br>
+
+              <input type="text" id="phone-${a.lat}" placeholder="Enter M-Pesa phone number" style="width:100%;padding:6px;margin-bottom:6px;">
+
+              <button onclick="payNow('${a.price}','phone-${a.lat}')"
+              style="background:green;color:white;border:none;padding:8px;width:100%;border-radius:5px;">
+              Pay with M-Pesa
+              </button>
+`);
+        }
+    });
+}
+
+function getDistance(lat1, lon1, lat2, lon2){
+    const R = 6371;
+    const dLat = (lat2-lat1) * Math.PI/180;
+    const dLon = (lon2-lon1) * Math.PI/180;
+    const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R*c;
+}
+
+// On load: show live location if available
+if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(pos => {
+        showNearby(pos.coords.latitude, pos.coords.longitude);
+    }, () => alert("Unable to access your location. Please allow location access."));
+}
+
+// Search button
+document.getElementById('findBtn').addEventListener('click', () => {
+    let loc = document.getElementById('locationInput').value.trim();
+    if(loc === ""){
+        if(navigator.geolocation){
+            navigator.geolocation.getCurrentPosition(pos => showNearby(pos.coords.latitude, pos.coords.longitude));
+        } else alert("Geolocation not supported.");
+    } else {
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(loc)}`)
+        .then(res => res.json())
+        .then(data => {
+            if(data.length > 0){
+                showNearby(parseFloat(data[0].lat), parseFloat(data[0].lon));
+            } else alert("Location not found");
+        });
+    }
+});
+function payNow(price, phoneInputId){
+
+    let phone = document.getElementById(phoneInputId).value;
+
+    if(phone === ""){
+        alert("Please enter your M-Pesa number");
+        return;
+    }
+
+    fetch(`/pay/?phone=${phone}&amount=${price}`)
+    .then(res => res.json())
+    .then(data => {
+        alert("M-Pesa prompt sent. Check your phone to complete payment.");
+        console.log(data);
+    })
+    .catch(err => {
+        alert("Payment failed. Try again.");
+        console.error(err);
+    });
+
+}
+</script>
+</body>
+</html>

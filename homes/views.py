@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from .models import Apartment
 
 # Create your views here.
 def about(request):
@@ -13,9 +14,7 @@ def properties(request):
     return render(request,'properties.html')
 def propertysingle(request):
     return render(request,'property-single.html')
-def servicedetails(request):
-    return render(request,'service-details.html')
-def services(request):
-    return render(request,'services.html')
-def starterpage(request):
-    return render(request,'starterpage.html')
+def maps(request):
+    apartments = Apartment.objects.all()
+    return render(request, "maps.html", {"apartments": apartments})
+
