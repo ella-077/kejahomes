@@ -27,4 +27,5 @@ urlpatterns = [
     path('properties/',views.properties,name='properties'),
     path('property-single/',views.propertysingle,name='property-single'),
     path('maps/', views.maps, name='maps'),
+    path('pay/', views.mpesa_payment, name="pay")
 ]
