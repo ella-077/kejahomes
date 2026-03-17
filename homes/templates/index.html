@@ -29,6 +29,7 @@
   <!-- Main CSS File -->
   <link href="{%static 'assets/css/main.css' %}" rel="stylesheet">
    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
   <!-- =======================================================
   * Template Name: EstateAgency
@@ -44,11 +45,13 @@
   <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
 
-      <a href="index.html" class="logo d-flex align-items-center">
-        <!-- Uncomment the line below if you also wish to use an image logo -->
-        <!-- <img src="assets/img/logo.png" alt=""> -->
-        <h1 class="sitename">KEJA<span>HOMES</span></h1>
-      </a>
+   <div class="logo d-flex align-items-center">
+  <h1 class="sitename m-0">
+    KEJA<span>HOMES</span>
+  </h1>
+</div>
+
+
 
       <nav id="navmenu" class="navmenu">
         <ul>
@@ -66,63 +69,85 @@
 
   <main class="main">
 
-    <!-- Hero Section -->
-    <section id="hero" class="hero section dark-background">
+    <!-- Hero Section -->  <section id="hero" class="hero section dark-background">
 
-      <div id="hero-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+      <div id="hero-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
 
-        <div class="carousel-item active">
-          <img src="{%static 'assets/img/hero-carousel/hero-carousel-1.jpg' %}" alt="">
+        <div class="carousel-item active" >
+          <img src="{%static 'assets/img/hero-carousel/WhatsApp Image 2026-03-17 at 8.02.18 AM.jpeg' %}" alt="">
           <div class="carousel-container">
             <div>
-              <p>Nairobi, westlands</p>
-              <h2><span>204</span> lavington</h2>
-              <a href="property-single.html" class="btn-get-started">rent | sh 12000</a>
+
+              <h2><span>Karen</span> Nairobi</h2>
+              <a href="{% url 'properties' %}" class="btn-get-started">sale | KSH 1.2M</a>
             </div>
           </div>
-        </div><!-- End Carousel Item -->
-         <div class="carousel-item">
-          <img src="{%static 'assets/img/img_2.png' %}" alt="">
-          <div class="carousel-container">
-            <div>
-              <p>Nairobi, utawala</p>
-              <h2><span>247</span> </h2>
-              <a href="property-single.html" class="btn-get-started">sale | sh 356000</a>
-            </div>
-          </div>
-        </div><!-- End Carousel Item -->
+        </div>
 
         <div class="carousel-item">
-          <img src="{%static 'assets/img/img_2.png' %}" alt="">
+          <img src="{%static 'assets/img/hero-carousel/runda-house.jpg' %}" alt="">
           <div class="carousel-container">
             <div>
-              <p>Nairobi, utawala</p>
-              <h2><span>247</span>Mombasa road </h2>
-              <a href="property-single.html" class="btn-get-started">sale | sh 356000</a>
+
+              <h2><span>Runda</span> Nairobi</h2>
+              <a href="{% url 'properties' %}" class="btn-get-started">sale | KSH 3.5M</a>
             </div>
           </div>
-        </div><!-- End Carousel Item -->
-         <div class="carousel-item">
-          <img src="{%static 'assets/img/img_2.png' %}" alt="">
+        </div>
+
+          <div class="carousel-item">
+          <img src="{%static 'assets/img/hero-carousel/buruburu-house.jpg' %}" alt="">
           <div class="carousel-container">
             <div>
-              <p>Mombasa, diani</p>
-              <h2><span>247</span>kisite road </h2>
-              <a href="property-single.html" class="btn-get-started">sale | sh 356,000,000</a>
+
+              <h2><span>Buruburu</span> Nairobi</h2>
+              <a href="{% url 'properties' %}" class="btn-get-started">sale | KSH 750.000</a>
             </div>
           </div>
-        </div><!-- End Carousel Item -->
+        </div>
 
         <div class="carousel-item">
-          <img src="{%static 'assets/img/img.png' %}" alt="">
+          <img src="{%static 'assets/img/hero-carousel/WhatsApp Image 2026-03-17 at 8.05.18 AM.jpeg' %}" alt="">
           <div class="carousel-container">
             <div>
-              <p>Kiambu, limuru</p>
-              <h2><span>247</span> kwambera road</h2>
-              <a href="property-single.html" class="btn-get-started">rent | sh 30000</a>
+
+              <h2><span>Wundanyi</span> Taita Taveta</h2>
+              <a href="{% url 'properties' %}" class="btn-get-started">sale | KSH 2.4M</a>
             </div>
           </div>
-        </div><!-- End Carousel Item -->
+        </div>
+
+             <div class="carousel-item">
+          <img src="{%static 'assets/img/hero-carousel/WhatsApp Image 2026-03-17 at 8.06.36 AM.jpeg' %}" alt="">
+          <div class="carousel-container">
+            <div>
+
+              <h2><span>Lodwar</span> Turkana</h2>
+              <a href="{% url 'properties' %}" class="btn-get-started">sale | KSH 650.000</a>
+            </div>
+          </div>
+        </div>
+
+          <div class="carousel-item">
+          <img src="{%static 'assets/img/hero-carousel/WhatsApp Image 2026-03-17 at 8.08.07 AM.jpeg' %}" alt="">
+          <div class="carousel-container">
+            <div>
+
+              <h2><span>Hola</span> Tana River</h2>
+              <a href="{% url 'properties' %}" class="btn-get-started">sale | KSH 700.000</a>
+            </div>
+          </div>
+        </div>
+
+           <div class="carousel-item">
+          <img src="{%static 'assets/img/hero-carousel/WhatsApp Image 2026-03-17 at 8.03.51 AM.jpeg' %}" alt="">
+          <div class="carousel-container">
+            <div>
+
+              <h2><span>Athi River</span> Machakos</h2>
+              <a href="{% url 'properties' %}" class="btn-get-started">sale | KSH 820.000</a>
+            </div>
+
 
         <a class="carousel-control-prev" href="#hero-carousel" role="button" data-bs-slide="prev">
           <span class="carousel-control-prev-icon bi bi-chevron-left" aria-hidden="true"></span>
@@ -253,15 +278,24 @@
             </div>
           </div><!-- End Team Member -->
 
+           <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+            <div class="member">
+              <div class="pic"><img src="{%static 'assets/img/team/WhatsApp Image 2026-03-17 at 9.24.06 AM.jpeg' %}" class="img-fluid" alt=""></div>
+              <div class="member-info">
+                <h4>Kuyo Nawot</h4>
+                <span>Agent<br></span>
+              </div>
+            </div>
+          </div>
           <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
             <div class="member">
-              <div class="pic"><img src="{%static 'assets/img/team/team-3.jpg' %}" class="img-fluid" alt=""></div>
+              <div class="pic"><img src="{%static 'assets/img/team/WhatsApp Image 2026-03-17 at 9.07.40 AM.jpeg' %}" class="img-fluid" alt=""></div>
               <div class="member-info">
                 <h4>Cliff Michigan</h4>
                 <span>Agent<br></span>
               </div>
             </div>
-          </div><!-- End Team Member -->
+             </div><!-- End Team Member -->
           <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
             <div class="member">
               <div class="pic"><img src="{%static 'assets/img/team/WhatsApp Image 2026-03-12 at 10.09.49 AM.jpeg' %}" class="img-fluid" alt=""></div>
@@ -271,15 +305,11 @@
               </div>
             </div>
           </div>
-            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-            <div class="member">
-              <div class="pic"><img src="{%static 'assets/img/team/WhatsApp Image 2026-03-12 at 9.43.31 AM.jpeg' %}" class="img-fluid" alt=""></div>
-              <div class="member-info">
-                <h4>Kuyo Nawot</h4>
-                <span>Agent<br></span>
-              </div>
+
+
             </div>
-          </div>
+
+
 
         </div>
 

@@ -4,6 +4,8 @@ import datetime
 from django.contrib.sites import requests
 from django.http import JsonResponse
 from django.shortcuts import render
+
+from keja import settings
 from .models import Apartment
 
 # Create your views here.
@@ -28,16 +30,21 @@ def mpesa_payment(request):
     phone = request.GET.get("phone")
     amount = request.GET.get("amount")
 
-    consumer_key = "YOUR_CONSUMER_KEY"
-    consumer_secret = "YOUR_CONSUMER_SECRET"
+    if not phone or not amount:
+        return JsonResponse({"error": "Phone and amount required"})
 
-    # Get Access Token
+    if phone.startswith("0"):
+        phone = "254" + phone[1:]
+
+    consumer_key = settings.MPESA_CONSUMER_KEY
+    consumer_secret = settings.MPESA_CONSUMER_SECRET
+
     auth_url = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
     r = requests.get(auth_url, auth=(consumer_key, consumer_secret))
     access_token = r.json()['access_token']
 
     shortcode = "174379"
-    passkey = "YOUR_PASSKEY"
+    passkey = settings.MPESA_PASSKEY
 
     timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
 
@@ -58,12 +65,15 @@ def mpesa_payment(request):
         "PartyA": phone,
         "PartyB": shortcode,
         "PhoneNumber": phone,
-        "CallBackURL": "https://yourdomain.com/callback/",
+        "CallBackURL": "https://your-ngrok-url/mpesa/callback/",
         "AccountReference": "KejaHomes",
         "TransactionDesc": "Apartment Payment"
     }
 
     response = requests.post(stk_url, json=payload, headers=headers)
+
+    print("STATUS:", response.status_code)
+    print("RESPONSE:", response.text)
 
     return JsonResponse(response.json())
 
