@@ -10,8 +10,7 @@
   <meta name="keywords" content="">
 
   <!-- Favicons -->
-  <link href="{%static 'assets/img/favicon.png' %}" rel="icon">
-  <link href="{%static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+  <link href="{% static 'assets/img/favicon//property.png' %}" rel="icon">
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -58,6 +57,28 @@
           <li><a href="{% url 'contact' %}">Contact</a></li>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
+         <div class="d-flex align-items-center ms-5"> <!-- ms-auto pushes it to the far right -->
+      {% if user.is_authenticated %}
+        <div class="dropdown">
+          <button class="btn rounded-circle bg-success text-white fw-bold"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  style="width:40px; height:40px;">
+            {{ user.username|first|upper }}
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li class="dropdown-item-text">
+              Signed in as <strong>{{ user.username }}</strong>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'my-applications' %}">My Applications</a></li>
+            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+          </ul>
+        </div>
+      {% else %}
+        <a href="{% url 'login' %}" class="btn btn-outline-success">Login</a>
+      {% endif %}
+    </div>
 
 
     </div>

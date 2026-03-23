@@ -1,4 +1,3 @@
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -6,52 +5,85 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Index - KEJA HOMES </title>
+  <title>Index - KEJA HOMES</title>
   <meta name="description" content="">
   <meta name="keywords" content="">
 
   <!-- Favicons -->
-  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
-  <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+  <link href="{% static 'assets/img/favicon/property.png' %}" rel="icon">
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Poppins:wght@400;500;700&family=Raleway:wght@400;500;700&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="{%static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-  <link href="{%static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
-  <link href="{%static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
-  <link href="{%static 'assets/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
-  <link href="{%static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
 
   <!-- Main CSS File -->
-  <link href="{%static 'assets/css/main.css' %}" rel="stylesheet">
-   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
-  <!-- =======================================================
-  * Template Name: EstateAgency
-  * Template URL: https://bootstrapmade.com/real-estate-agency-bootstrap-template/
-  * Updated: Aug 09 2024 with Bootstrap v5.3.3
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
+  <style>
+    /* Hero carousel thumbnails */
+    .carousel-thumbnails {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 10px 0;
+    }
+
+    .carousel-thumbnails img {
+      height: 80px;
+      width: auto;
+      border-radius: 5px;
+      object-fit: cover;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .carousel-thumbnails img:hover {
+      transform: scale(1.05);
+    }
+
+    /* Agents row */
+    .agents-row {
+      display: flex;
+      gap: 15px;
+      overflow-x: auto;
+      padding: 10px 0;
+    }
+
+    .agents-row .member {
+      flex: 0 0 auto;
+      width: 160px;
+      text-align: center;
+    }
+
+    .agents-row .member .pic img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 5px;
+    }
+  </style>
+
 </head>
 
-<body class="index-page">
+<body class="contact-page">
 
+  <!-- Header -->
   <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
-
-   <div class="logo d-flex align-items-center">
-  <h1 class="sitename m-0">
-    KEJA<span>HOMES</span>
-  </h1>
-</div>
-
-
+      <div class="logo d-flex align-items-center">
+        <h1 class="sitename m-0">KEJA<span>HOMES</span></h1>
+      </div>
 
       <nav id="navmenu" class="navmenu">
         <ul>
@@ -60,14 +92,32 @@
           <li><a href="{% url 'properties' %}">Properties</a></li>
           <li><a href="{% url 'agents' %}">Agents</a></li>
           <li><a href="{% url 'contact' %}">Contact</a></li>
-
+        </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
+
+      <!-- Right side: user icon / login -->
+      <div class="d-flex align-items-center ms-5">
+        {% if user.is_authenticated %}
+        <div class="dropdown">
+          <button class="btn rounded-circle bg-success text-white fw-bold" type="button" data-bs-toggle="dropdown" style="width:40px; height:40px;">
+            {{ user.username|first|upper }}
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li class="dropdown-item-text">Signed in as <strong>{{ user.username }}</strong></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'my-applications' %}">My Applications</a></li>
+            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+          </ul>
+        </div>
+        {% else %}
+        <a href="{% url 'login' %}" class="btn btn-outline-success">Login</a>
+        {% endif %}
+      </div>
 
     </div>
   </header>
 
-  <main class="main">
 
     <!-- Hero Section -->  <section id="hero" class="hero section dark-background">
 
@@ -161,169 +211,109 @@
 
       </div>
 
-    </section><!-- /Hero Section -->
+    </section>
+
+    <!-- Carousel Controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#hero-carousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#hero-carousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    </button>
+
+    <!-- Carousel Indicators -->
+    <ol class="carousel-indicators">
+      <li data-bs-target="#hero-carousel" data-bs-slide-to="0" class="active"></li>
+      <li data-bs-target="#hero-carousel" data-bs-slide-to="1"></li>
+      <li data-bs-target="#hero-carousel" data-bs-slide-to="2"></li>
+      <li data-bs-target="#hero-carousel" data-bs-slide-to="3"></li>
+      <li data-bs-target="#hero-carousel" data-bs-slide-to="4"></li>
+      <li data-bs-target="#hero-carousel" data-bs-slide-to="5"></li>
+      <li data-bs-target="#hero-carousel" data-bs-slide-to="6"></li>
+    </ol>
+  </div>
+</section>
 
     <!-- Services Section -->
     <section id="services" class="services section">
-
-      <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
         <h2>Our Services</h2>
-        <p>We are a kenyan-based network that helps individuals to get acess to homes any where in the country</p>
-      </div><!-- End Section Title -->
-
-      <div class="container">
-
-        <div class="row gy-4">
-
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-            <div class="service-item  position-relative">
-              <div class="icon">
-      <i class="bi bi-building-check"></i>
-
-
-              </div>
-              <a href="{% url 'maps' %}" class="stretched-link">
-                <h3>RENTALS</h3>
-              </a>
-              <p>We help you access any rentals in the country by just clicking this button you will be directed to the place of your choice.</p>
-            </div>
-          </div><!-- End Service Item -->
-
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-            <div class="service-item position-relative">
-              <div class="icon">
-             <i class="bi bi-house-heart-fill"></i>
-
-
-
-
-              </div>
-              <a href="{% url 'maps' %}" class="stretched-link">
-                <h3>PURCHASE YOUR OWN HOUSE</h3>
-              </a>
-              <p>We help you access any Home of your choice in the country by just clicking this button you will be directed to the homes available for the price you are interested in.</p>
-            </div>
-          </div><!-- End Service Item -->
-
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-            <div class="service-item position-relative">
-              <div class="icon">
-             <i class="bi bi-house-door-fill"></i>
-
-
-
-
-
-
-
-
-
-              </div>
-              <a href="{% url 'maps' %}" class="stretched-link">
-                <h3>AirBnB</h3>
-              </a>
-              <p>By clicking this button you will acess any fully furnished airbnb around you to spend your time and be safe.</p>
-            </div>
-
-          </div><!-- End Service Item -->
-
-<a href="{% url 'maps' %}"
-   class="btn text-white rounded-pill px-4 py-2"
-   style="background-color:#7ED957;">
-   Get A Place To Stay
-</a>
-
-
-
-
-        </div>
-
+        <p>We are a Kenyan-based network that helps individuals access homes anywhere in the country</p>
       </div>
 
-    </section><!-- /Services Section -->
+      <div class="container">
+        <div class="row gy-4">
+          <div class="col-lg-4 col-md-6">
+            <div class="service-item position-relative">
+              <div class="icon"><i class="bi bi-building-check"></i></div>
+              <a href="{% url 'maps' %}" class="stretched-link"><h3>RENTALS</h3></a>
+              <p>We help you access any rentals in the country by just clicking this button you will be directed to the place of your choice.</p>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <div class="service-item position-relative">
+              <div class="icon"><i class="bi bi-house-heart-fill"></i></div>
+              <a href="{% url 'maps' %}" class="stretched-link"><h3>PURCHASE YOUR OWN HOUSE</h3></a>
+              <p>We help you access any home of your choice by directing you to homes in your price range.</p>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <div class="service-item position-relative">
+              <div class="icon"><i class="bi bi-house-door-fill"></i></div>
+              <a href="{% url 'maps' %}" class="stretched-link"><h3>AirBnB</h3></a>
+              <p>Access fully furnished AirBnBs around you to spend your time safely.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+     <div class="container mt-4">
+    <a href="{% url 'maps' %}" class="btn btn-success rounded-pill px-4 py-3 w-100">Get a Place to Stay</a>
+  </div>
+</section>
+</section>
+
+
 
     <!-- Agents Section -->
     <section id="agents" class="agents section">
-
-      <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
         <h2>Our Agents</h2>
-        <p>Meet our dedicated agents who are passionate about helping you find a place you can call home. They are ready to guide you through every step of your house-hunting journey.</p>
-      </div><!-- End Section Title -->
-
-      <div class="container">
-
-        <div class="row gy-5">
-
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-            <div class="member">
-              <div class="pic"><img src="{%static 'assets/img/team/WhatsApp Image 2026-01-30 at 5.38.19 PM.jpeg' %}" class="img-fluid" alt=""></div>
-              <div class="member-info">
-                <h4>Stella Wanjiku</h4>
-                <span>Agent</span>
-
-              </div>
-            </div>
-          </div><!-- End Team Member -->
-
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-            <div class="member">
-              <div class="pic"><img src="{%static 'assets/img/team/WhatsApp Image 2026-03-12 at 10.01.33 AM.jpeg' %}" class="img-fluid" alt=""></div>
-              <div class="member-info">
-                <h4>Ndung'u Njunge</h4>
-                <span>Agent</span>
-
-              </div>
-            </div>
-          </div><!-- End Team Member -->
-
-           <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-            <div class="member">
-              <div class="pic"><img src="{%static 'assets/img/team/WhatsApp Image 2026-03-17 at 9.24.06 AM.jpeg' %}" class="img-fluid" alt=""></div>
-              <div class="member-info">
-                <h4>Kuyo Nawot</h4>
-                <span>Agent<br></span>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-            <div class="member">
-              <div class="pic"><img src="{%static 'assets/img/team/WhatsApp Image 2026-03-17 at 9.07.40 AM.jpeg' %}" class="img-fluid" alt=""></div>
-              <div class="member-info">
-                <h4>Cliff Michigan</h4>
-                <span>Agent<br></span>
-              </div>
-            </div>
-             </div><!-- End Team Member -->
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-            <div class="member">
-              <div class="pic"><img src="{%static 'assets/img/team/WhatsApp Image 2026-03-12 at 10.09.49 AM.jpeg' %}" class="img-fluid" alt=""></div>
-              <div class="member-info">
-                <h4>Elizabeth Melisah</h4>
-                <span>Agent<br></span>
-              </div>
-            </div>
-          </div>
-
-
-            </div>
-
-
-
-        </div>
-
+        <p>Meet our dedicated agents who are passionate about helping you find a home.</p>
       </div>
 
-    </section><!-- /Agents Section -->
-
-
+      <div class="agents-row">
+        <div class="member">
+          <div class="pic"><img src="{% static 'assets/img/team/WhatsApp Image 2026-01-30 at 5.38.19 PM.jpeg' %}" alt="Stella"></div>
+          <h4>Stella Wanjiku</h4>
+          <span>Agent</span>
+        </div>
+        <div class="member">
+          <div class="pic"><img src="{% static 'assets/img/team/WhatsApp Image 2026-03-12 at 10.01.33 AM.jpeg' %}" alt="Ndungu"></div>
+          <h4>Ndung'u Njunge</h4>
+          <span>Agent</span>
+        </div>
+        <div class="member">
+          <div class="pic"><img src="{% static 'assets/img/team/WhatsApp Image 2026-03-17 at 9.24.06 AM.jpeg' %}" alt="Kuyo"></div>
+          <h4>Kuyo Nawot</h4>
+          <span>Agent</span>
+        </div>
+        <div class="member">
+          <div class="pic"><img src="{% static 'assets/img/team/WhatsApp Image 2026-03-17 at 9.07.40 AM.jpeg' %}" alt="Cliff"></div>
+          <h4>Cliff Michigan</h4>
+          <span>Agent</span>
+        </div>
+        <div class="member">
+          <div class="pic"><img src="{% static 'assets/img/team/WhatsApp Image 2026-03-12 at 10.09.49 AM.jpeg' %}" alt="Elizabeth"></div>
+          <h4>Elizabeth Melisah</h4>
+          <span>Agent</span>
+        </div>
+      </div>
+    </section>
 
   </main>
 
-
   <footer id="footer" class="footer light-background">
-
     <div class="container">
       <div class="row gy-3">
         <div class="col-lg-3 col-md-6 d-flex">
@@ -332,58 +322,30 @@
             <h4>Address</h4>
             <p>Kipro Center</p>
             <p>Westlands, Nairobi</p>
-            <p></p>
           </div>
-
         </div>
-
         <div class="col-lg-3 col-md-6 d-flex">
           <i class="bi bi-telephone icon"></i>
           <div>
             <h4>Contact</h4>
-            <p>
-              <strong>Phone:</strong> <span>+254112299921</span><br>
-              <strong>Email:</strong> <span>kejahomes@gmail.com</span><br>
-            </p>
+            <p><strong>Phone:</strong> +254112299921<br>
+            <strong>Email:</strong> kejahomes@gmail.com</p>
           </div>
         </div>
-
         <div class="col-lg-3 col-md-6 d-flex">
           <i class="bi bi-clock icon"></i>
           <div>
             <h4>Opening Hours</h4>
-            <p>
-              <strong>Open 24/7</strong> <span>Your Home, Anytime</span><br>
-            </p>
+            <p><strong>Open 24/7</strong> Your Home, Anytime</p>
           </div>
         </div>
-
-
       </div>
     </div>
-
-    <div class="container copyright text-center mt-4">
-      <p>© <span>Copyright</span> <strong class="px-1 sitename">KejaHomes.</strong> <span>All Rights Reserved.</span></p>
-    </div>
-
   </footer>
-  <!-- Scroll Top -->
-  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-  <!-- Preloader -->
-  <div id="preloader"></div>
 
   <!-- Vendor JS Files -->
-  <script src="{%static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-  <script src="{%static 'assets/vendor/php-email-form/validate.js' %}"></script>
-  <script src="{%static 'assets/vendor/aos/aos.js' %}"></script>
-  <script src="{%static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
-  <script src="{%static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
-
-  <!-- Main JS File -->
-  <script src="{%static 'assets/js/main.js' %}"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js">
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/js/main.js' %}"></script>
 
 </body>
-
 </html>

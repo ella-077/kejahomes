@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Applications</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+ <!-- Favicons -->
+<link href="{% static 'assets/img/favicon//property.png' %}" rel="icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{%static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{%static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{%static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{%static 'assets/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+  <link href="{%static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{%static 'assets/css/main.css' %}" rel="stylesheet">
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+ <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+
+        <div class="logo d-flex align-items-center">
+  <h1 class="sitename m-0">
+    KEJA<span>HOMES</span>
+  </h1>
+</div>
+
+  <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="{% url 'index' %}" class="active">Home</a></li>
+          <li><a href="{% url 'about' %}">Services</a></li>
+          <li><a href="{% url 'properties' %}">Properties</a></li>
+          <li><a href="{% url 'agents' %}">Agents</a></li>
+          <li><a href="{% url 'contact' %}">Contact</a></li>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+         <div class="d-flex align-items-center ms-5"> <!-- ms-auto pushes it to the far right -->
+      {% if user.is_authenticated %}
+        <div class="dropdown">
+          <button class="btn rounded-circle bg-success text-white fw-bold"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  style="width:40px; height:40px;">
+            {{ user.username|first|upper }}
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li class="dropdown-item-text">
+              Signed in as <strong>{{ user.username }}</strong>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'my-applications' %}">My Applications</a></li>
+            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+          </ul>
+        </div>
+      {% else %}
+        <a href="{% url 'login' %}" class="btn btn-outline-success">Login</a>
+      {% endif %}
+    </div>
+
+
+    </div>
+  </header>
+<div class="container mt-5">
+    <h2 class="mb-4">
+        {% if user.is_superuser %}All Applications{% else %}My Applications{% endif %}
+    </h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    {% if applications %}
+        {% for app in applications %}
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body">
+                    <h5>{{ app.apartment }}</h5>
+                    <p>
+                        {% if user.is_superuser %}
+                            <strong>User:</strong> {{ app.user.username }}<br>
+                        {% endif %}
+                        <strong>Move-in Date:</strong> {{ app.move_in_date }}<br>
+                        <strong>Employment Status:</strong> {{ app.employment_status }}<br>
+                        <strong>Monthly Income:</strong> KES {{ app.monthly_income }}<br>
+                        <strong>Status:</strong>
+                        {% if app.status == 'pending' %}
+                            <span class="badge bg-warning text-dark">Pending Approval</span>
+                        {% elif app.status == 'approved' %}
+                            <span class="badge bg-success">Approved</span>
+                        {% else %}
+                            <span class="badge bg-danger">Rejected</span>
+                        {% endif %}
+                    </p>
+
+                    <!-- Admin approval section -->
+                    {% if user.is_superuser and app.status == 'pending' %}
+                        <form method="post" class="d-inline">
+                            {% csrf_token %}
+                            <input type="hidden" name="application_id" value="{{ app.id }}">
+                            <div class="mb-2">
+                                <input type="text" name="payment_info" class="form-control form-control-sm" placeholder="Enter payment instructions (Mpesa, Bank etc)">
+                            </div>
+                            <button name="action" value="approve" class="btn btn-success btn-sm">Approve</button>
+                            <button name="action" value="reject" class="btn btn-danger btn-sm">Reject</button>
+                        </form>
+                    {% endif %}
+
+                    <!-- User payment section -->
+                    {% if app.status == 'approved' and app.payment_info %}
+                        <button id="pay-now-btn-{{ app.id }}" class="btn btn-primary btn-sm">Pay Now</button>
+                        <div id="payment-details-{{ app.id }}" style="display:none; margin-top:10px;">
+                            <p><strong>Payment Instructions:</strong> {{ app.payment_info }}</p>
+                        </div>
+                    {% elif app.status == 'pending' %}
+                        <p>Waiting for admin approval...</p>
+                    {% endif %}
+
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>You have not submitted any applications yet.</p>
+    {% endif %}
+</div>
+
+<!-- JavaScript for Pay Now buttons -->
+<script>
+{% for app in applications %}
+document.getElementById('pay-now-btn-{{ app.id }}')?.addEventListener('click', function() {
+    document.getElementById('payment-details-{{ app.id }}').style.display = 'block';
+    this.style.display = 'none';
+});
+{% endfor %}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

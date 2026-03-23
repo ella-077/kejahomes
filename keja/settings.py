@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'homes'
+    'homes',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
@@ -47,6 +48,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -119,14 +121,5 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
-
-
-MPESA_ENVIRONMENT =  'sandbox'
-MPESA_CONSUMER_KEY = 'etPa6cyU9SS80uRaGY5L4mmLWmNtlhzXEvV5cRAJtyV6nqlw'
-MPESA_CONSUMER_SECRET = 'sw8BueD4Au7gNUo7GA50rHpQwbrtWmzgx2flZE9bpO3enkahCOtGgoAfonEJHcTF'
-MPESA_SHORTCODE = '174379'
-MPESA_EXPRESS_SHORTCODE = '174379'
-MPESA_SHORTCODE_TYPE = 'paybill'
-MPESA_PASSKEY = 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919'
-MPESA_INITIATOR_USERNAME = 'testapi'
-MPESA_INITIATOR_SECURITY_CREDENTIALS = 'Safaricom123!!'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

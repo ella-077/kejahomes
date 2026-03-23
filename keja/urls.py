@@ -14,18 +14,31 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path,include
+from django.urls import path
 from homes import views
+from keja import settings
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('about/',views.about,name='about'),
     path('agents/',views.agents,name='agents'),
     path('contact/',views.contact,name='contact'),
-    path('', views.index, name='index'),
+    path('index/', views.index, name='index'),
     path('properties/',views.properties,name='properties'),
     path('property-single/',views.propertysingle,name='property-single'),
     path('maps/', views.maps, name='maps'),
-    path('pay/', views.mpesa_payment, name="pay")
+    path('apply/',views.apply, name='apply'),
+    path('myapplications/', views.myapplications, name='my-applications'),
+    path('', views.user_login, name='login'),
+    path('logout/', views.user_logout, name='logout'),
+    path('register/', views.register, name='register'),
+
+    path('manage-applications/',views.manage_applications,name='manage_applications'),
+    path('payment/<int:app_id>/', views.payment_instructions, name='payment_instructions'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

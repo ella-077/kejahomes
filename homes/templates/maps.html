@@ -5,8 +5,8 @@
 <meta charset="UTF-8">
 <title>Find Apartments - KejaHomes</title>
 
-<link href="{% static 'assets/img/favicon.png' %}" rel="icon">
-<link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+<link href="{% static 'assets/img/favicon//property.png' %}" rel="icon">
 
 <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Poppins&family=Raleway&display=swap" rel="stylesheet">
 
@@ -49,6 +49,37 @@ body { padding-top: 100px; font-family: 'Poppins', sans-serif; }
 .navmenu ul { list-style: none; padding: 0; display: flex; gap: 15px; }
 .navmenu ul li a { text-decoration: none; color: #333; font-weight: bold; }
 .navmenu ul li a.active { color: #007bff; }
+
+/* LIGHTBOX STYLES */
+#lightbox {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.9);
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+#lightbox-img {
+    max-width: 95%;
+    max-height: 95%;
+    object-fit: contain;
+}
+.apply-btn {
+    background-color: #28a745; /* green */
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.apply-btn:hover {
+    background-color: #218838; /* darker green on hover */
+}
 </style>
 </head>
 
@@ -66,6 +97,28 @@ body { padding-top: 100px; font-family: 'Poppins', sans-serif; }
 </ul>
 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
 </nav>
+    <div class="d-flex align-items-center ms-5"> <!-- ms-auto pushes it to the far right -->
+      {% if user.is_authenticated %}
+        <div class="dropdown">
+          <button class="btn rounded-circle bg-success text-white fw-bold"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  style="width:40px; height:40px;">
+            {{ user.username|first|upper }}
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li class="dropdown-item-text">
+              Signed in as <strong>{{ user.username }}</strong>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'my-applications' %}">My Applications</a></li>
+            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+          </ul>
+        </div>
+      {% else %}
+        <a href="{% url 'login' %}" class="btn btn-outline-success">Login</a>
+      {% endif %}
+    </div>
 </div>
 </header>
 
@@ -77,71 +130,73 @@ body { padding-top: 100px; font-family: 'Poppins', sans-serif; }
 <div id="map"></div>
 
 <footer id="footer" class="footer light-background">
-
-    <div class="container">
-      <div class="row gy-3">
-        <div class="col-lg-3 col-md-6 d-flex">
-          <i class="bi bi-geo-alt icon"></i>
-          <div class="address">
-            <h4>Address</h4>
-            <p>Kipro Center</p>
-            <p>Westlands, Nairobi</p>
-            <p></p>
-          </div>
-
-        </div>
-
-        <div class="col-lg-3 col-md-6 d-flex">
-          <i class="bi bi-telephone icon"></i>
-          <div>
-            <h4>Contact</h4>
-            <p>
-              <strong>Phone:</strong> <span>+254112299921</span><br>
-              <strong>Email:</strong> <span>kejahomes@gmail.com</span><br>
-            </p>
-          </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6 d-flex">
-          <i class="bi bi-clock icon"></i>
-          <div>
-            <h4>Opening Hours</h4>
-            <p>
-              <strong>Open 24/7</strong> <span>Your Home, Anytime</span><br>
-            </p>
-          </div>
-        </div>
-
-
+<div class="container">
+  <div class="row gy-3">
+    <div class="col-lg-3 col-md-6 d-flex">
+      <i class="bi bi-geo-alt icon"></i>
+      <div class="address">
+        <h4>Address</h4>
+        <p>Kipro Center</p>
+        <p>Westlands, Nairobi</p>
       </div>
     </div>
-
-    <div class="container copyright text-center mt-4">
-      <p>© <span>Copyright</span> <strong class="px-1 sitename">KejaHomes.</strong> <span>All Rights Reserved.</span></p>
+    <div class="col-lg-3 col-md-6 d-flex">
+      <i class="bi bi-telephone icon"></i>
+      <div>
+        <h4>Contact</h4>
+        <p>
+          <strong>Phone:</strong> <span>+254112299921</span><br>
+          <strong>Email:</strong> <span>kejahomes@gmail.com</span><br>
+        </p>
+      </div>
     </div>
+    <div class="col-lg-3 col-md-6 d-flex">
+      <i class="bi bi-clock icon"></i>
+      <div>
+        <h4>Opening Hours</h4>
+        <p><strong>Open 24/7</strong> <span>Your Home, Anytime</span></p>
+      </div>
+    </div>
+  </div>
+</div>
 
-  </footer>
+<div class="container copyright text-center mt-4">
+  <p>© <span>Copyright</span> <strong class="px-1 sitename">KejaHomes.</strong> <span>All Rights Reserved.</span></p>
+</div>
+</footer>
+
+<!-- LIGHTBOX DIV -->
+<div id="lightbox">
+    <img id="lightbox-img">
+</div>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 <script>
+// Initialize map
 let map = L.map('map').setView([-1.286389, 36.817223], 13);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors'
 }).addTo(map);
-
 let apartments = [
-    {% for a in apartments %}
-    {
-        name:"{{a.name}}",
-        price:"{{a.price}}",
-        contact:"{{a.contact}}",
-        lat:{{a.latitude}},
-        lng:{{a.longitude}},
-        description:"{{a.description}}"
-    },
-    {% endfor %}
+{% for a in apartments %}
+{
+    name: "{{ a.name }}",
+    price: "{{ a.price }}",
+    contact: "{{ a.contact }}",
+    lat: {{ a.latitude }},
+    lng: {{ a.longitude }},
+    description: "{{ a.description }}",
+
+    images: [
+        {% for img in a.images.all %}
+            "{{ img.image.url }}"{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ]
+}
+{% if not forloop.last %},{% endif %}
+{% endfor %}
 ];
 
 let userMarker;
@@ -157,20 +212,23 @@ function showNearby(lat, lng) {
 
     apartments.forEach(a => {
         if(getDistance(lat, lng, a.lat, a.lng) <= 50) {
-            L.marker([a.lat, a.lng])
-             .addTo(map)
-            .bindPopup(`
-              <b>${a.name}</b><br>
-              ${a.description}<br>
-              <b>Price:</b> ${a.price}<br>
-              <b>Contact:</b> ${a.contact}<br><br>
+L.marker([a.lat, a.lng])
+.addTo(map)
+.bindPopup(`
+    <b>${a.name}</b><br>
+    ${a.description}<br>
+    <b>Price:</b> ${a.price}<br>
+    <b>Contact:</b> ${a.contact}<br><br>
 
-              <input type="text" id="phone-${a.lat}" placeholder="Enter M-Pesa phone number" style="width:100%;padding:6px;margin-bottom:6px;">
+    <div style="display:flex; gap:5px; overflow-x:auto;">
+        ${a.images.map(img => `
+            <img src="${img}" class="popup-img"
+            style="width:80px; height:60px; object-fit:cover; cursor:pointer; border-radius:5px;">
+        `).join('')}
+    </div>
 
-              <button onclick="payNow('${a.price}','phone-${a.lat}')"
-              style="background:green;color:white;border:none;padding:8px;width:100%;border-radius:5px;">
-              Pay with M-Pesa
-              </button>
+    <br>
+    <button class="apply-btn" onclick="window.location.href='{% url 'apply' %}'">Apply</button>
 `);
         }
     });
@@ -185,7 +243,7 @@ function getDistance(lat1, lon1, lat2, lon2){
     return R*c;
 }
 
-// On load: show live location if available
+// Show live location on load
 if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(pos => {
         showNearby(pos.coords.latitude, pos.coords.longitude);
@@ -209,27 +267,23 @@ document.getElementById('findBtn').addEventListener('click', () => {
         });
     }
 });
-function payNow(price, phoneInputId){
 
-    let phone = document.getElementById(phoneInputId).value;
+// LIGHTBOX FUNCTIONALITY
+const lightbox = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightbox-img");
 
-    if(phone === ""){
-        alert("Please enter your M-Pesa number");
-        return;
+// Delegated click for popup images
+document.addEventListener("click", function(e) {
+    if(e.target && e.target.classList.contains("popup-img")){
+        lightbox.style.display = "flex";
+        lightboxImg.src = e.target.src;
     }
+});
 
-    fetch(`/pay/?phone=${phone}&amount=${price}`)
-    .then(res => res.json())
-    .then(data => {
-        alert("M-Pesa prompt sent. Check your phone to complete payment.");
-        console.log(data);
-    })
-    .catch(err => {
-        alert("Payment failed. Try again.");
-        console.error(err);
-    });
-
-}
+// Close lightbox when clicking outside the image
+lightbox.addEventListener("click", function(e){
+    if(e.target === this) lightbox.style.display = "none";
+});
 </script>
 </body>
 </html>
